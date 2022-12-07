@@ -5,6 +5,7 @@ import Model.Transaction;
 import Model.Wallet;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import sun.security.provider.DSAPublicKeyImpl;
 
 import java.security.*;
 import java.sql.*;
@@ -28,11 +29,11 @@ public class BlockchainData {
     private Signature signing = Signature.getInstance("SHA256withDSA");
 
     //singleton class
-    private static BlockchainData instance;
+    private static BlockchainData instance; // always the same object is getting coded and not a new one
 
     static {
         try {
-            instance = new BlockchainData(); // create new blockchain
+            instance = new BlockchainData(); // if no one => create only once the object
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -204,6 +205,7 @@ public class BlockchainData {
         }
     }
 
+    // add a block to the last block that we have
     private void finalizeBlock(Wallet minersWallet) throws GeneralSecurityException, SQLException {
         latestBlock = new Block(BlockchainData.getInstance().currentBlockChain);
         latestBlock.setTransactionLedger(new ArrayList<>(newBlockTransactions));
@@ -418,7 +420,7 @@ public class BlockchainData {
         return currentBlockChain;
     }
 
-    public void setCurrentBlockChain(LinkedList<Block> currentBlockChain) {
+    public void setCurrentBlockChain(LinkedList<Block> currentBlockChain) { // have data private to not allow others to change anything
         this.currentBlockChain = currentBlockChain;
     }
 

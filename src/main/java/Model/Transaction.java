@@ -1,5 +1,7 @@
 package Model;
 
+import sun.security.provider.DSAPublicKeyImpl;
+
 import java.security.InvalidKeyException;
 import java.security.Signature;
 import java.security.SignatureException;
