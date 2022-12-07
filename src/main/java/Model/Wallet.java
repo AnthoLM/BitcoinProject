@@ -13,4 +13,14 @@ public class Wallet {
         keyPairGenerator.initialize(keySize);
         this.keyPair = keyPairGenerator.generateKeyPair() ;
     }
+
+    //Constructor for importing Keys only
+    public Wallet(PublicKey publicKey, PrivateKey privateKey) {
+        this.keyPair = new KeyPair(publicKey,privateKey);
+    }
+
+    public KeyPair getKeyPair() { return keyPair; }
+
+    public PublicKey getPublicKey() { return keyPair.getPublic(); }
+    public PrivateKey getPrivateKey() { return keyPair.getPrivate(); }
 }
