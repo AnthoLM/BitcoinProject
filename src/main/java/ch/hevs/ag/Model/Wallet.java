@@ -1,4 +1,4 @@
-package Model;
+package ch.hevs.ag.Model;
 
 import java.security.*;
 

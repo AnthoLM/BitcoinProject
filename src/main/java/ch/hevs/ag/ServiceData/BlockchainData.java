@@ -1,8 +1,8 @@
-package ServiceData;
+package ch.hevs.ag.ServiceData;
 
-import Model.Block;
-import Model.Transaction;
-import Model.Wallet;
+import ch.hevs.ag.Model.Block;
+import ch.hevs.ag.Model.Transaction;
+import ch.hevs.ag.Model.Wallet;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import sun.security.provider.DSAPublicKeyImpl;
