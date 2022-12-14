@@ -46,6 +46,13 @@ public class Block {
         prevHash = new byte[]{0};
     }
 
+    /**
+     * Verify the signature and update it
+     * @param signing The signature that will be verified
+     * @return
+     * @throws InvalidKeyException
+     * @throws SignatureException
+     */
     public Boolean isVerified(Signature signing)
             throws InvalidKeyException, SignatureException {
         signing.initVerify(new DSAPublicKeyImpl(this.minedBy));
@@ -53,6 +60,11 @@ public class Block {
         return signing.verify(this.currHash);
     }
 
+    /**
+     * compare 2 blocks
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

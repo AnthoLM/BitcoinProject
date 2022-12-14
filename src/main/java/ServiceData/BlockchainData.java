@@ -48,7 +48,9 @@ public class BlockchainData {
         return instance;
     }
 
+    //compare if the transaction is correct regarding the one already existing
     Comparator<Transaction> transactionComparator = Comparator.comparing(Transaction::getTimestamp);
+    //print the transaction into the UI
     public ObservableList<Transaction> getTransactionLedgerFX() {
         newBlockTransactionsFX.clear();
         newBlockTransactions.sort(transactionComparator);
@@ -56,11 +58,16 @@ public class BlockchainData {
         return FXCollections.observableArrayList(newBlockTransactionsFX);
     }
 
+    //return the amount of monney that the user have in his wallet
     public String getWalletBallanceFX() {
         return getBalance(currentBlockChain, newBlockTransactions,
                 WalletData.getInstance().getWallet().getPublicKey()).toString();
     }
 
+    /**
+     * return the balance using the following blockchain, the ledger and the public key of the user
+     * Go check all the blocks in the blockchain ig the user has any transaction
+     */
     private Integer getBalance(LinkedList<Block> blockChain,
                                ObservableList<Transaction> currentLedger, PublicKey walletAddress) {
         Integer balance = 0;
@@ -82,6 +89,11 @@ public class BlockchainData {
         return balance;
     }
 
+    /**
+     * Verify if the blockchain is correct
+     * @param currentBlockChain
+     * @throws GeneralSecurityException
+     */
     private void verifyBlockChain(LinkedList<Block> currentBlockChain) throws GeneralSecurityException {
         for (Block block : currentBlockChain) {
             if (!block.isVerified(signing)) {
@@ -100,6 +112,14 @@ public class BlockchainData {
         newBlockTransactions.sort(transactionComparator);
     }
 
+    /**
+     * Create a new transaction
+     * Will check if the user has enough balance in his wallet
+     * Will connect to the DB and create the transaction
+     * @param transaction
+     * @param blockReward
+     * @throws GeneralSecurityException
+     */
     public void addTransaction(Transaction transaction, boolean blockReward) throws GeneralSecurityException {
         try {
             if (getBalance(currentBlockChain, newBlockTransactions,
@@ -131,6 +151,10 @@ public class BlockchainData {
 
     }
 
+    /**
+     * Load all the blockchain and update the variable currentBlockChain and latestBlock
+     *
+     */
     public void loadBlockChain() {
         try {
             Connection connection = DriverManager.getConnection("jdbc:sqlite:HESCoin.sqlite");
@@ -167,6 +191,12 @@ public class BlockchainData {
         }
     }
 
+    /**
+     * Will load all the trasaction regarding the ledgerID
+     * @param ledgerID to choose which ledger is to verify
+     * @return
+     * @throws SQLException
+     */
     private ArrayList<Transaction> loadTransactionLedger(Integer ledgerID) throws SQLException {
         ArrayList<Transaction> transactions = new ArrayList<>();
         try {
@@ -195,6 +225,9 @@ public class BlockchainData {
         return transactions;
     }
 
+    /**
+     *
+     */
     public void mineBlock() {
         try {
             finalizeBlock(WalletData.getInstance().getWallet());
@@ -226,6 +259,10 @@ public class BlockchainData {
         newBlockTransactions.add(transaction);
     }
 
+    /**
+     * Create a block in the blockchain
+     * @param block Take the parameters of the Block
+     */
     private void addBlock(Block block) {
         try {
             Connection connection = DriverManager.getConnection
@@ -250,6 +287,10 @@ public class BlockchainData {
         }
     }
 
+    /**
+     * Will delete the current DB and update with the new DB
+     * @param receivedBC This will be the new DB
+     */
     private void replaceBlockchainInDatabase(LinkedList<Block> receivedBC) {
         try {
             Connection connection = DriverManager.getConnection
@@ -274,6 +315,11 @@ public class BlockchainData {
         }
     }
 
+    /**
+     *
+     * @param receivedBC
+     * @return
+     */
     public LinkedList<Block> getBlockchainConsensus(LinkedList<Block> receivedBC) {
         try {
             //Verify the validity of the received blockchain.
@@ -306,6 +352,11 @@ public class BlockchainData {
         return receivedBC;
     }
 
+    /**
+     * Will update the last transaction and add it into the blockchain
+     * @param receivedBC The DB updated with all the transactions
+     * @throws GeneralSecurityException
+     */
     private void updateTransactionLedgers(LinkedList<Block> receivedBC) throws GeneralSecurityException {
         for (Transaction transaction : receivedBC.getLast().getTransactionLedger()) {
             if (!getCurrentBlockChain().getLast().getTransactionLedger().contains(transaction) ) {
