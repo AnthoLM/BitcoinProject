@@ -6,50 +6,44 @@ import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
+import java.security.spec.*;
 import java.sql.*;
 
 public class WalletData {
 
-    // keep everything that we have in the wallet, get public, private key from database
-    private Wallet wallet;
-    private static WalletData instance;
-
-    static {
-        instance = new WalletData(); // at the loading of this class, creates one object of WalletData at first
+    private Wallet wallet ;
+    private  static WalletData instance ;
+    //in the creation of the class, it creates an object instance
+    //No need to call this method (it is also impossible to call it)
+    static
+    {
+        instance = new WalletData();
     }
 
-    public static WalletData getInstance()
-    {
-        return instance; // get this object
-    }
+    public static WalletData getInstance(){return instance;}
 
-    public void loadWallet() throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException // get the wallet from the database
-    {
-        // getting the data from the database
-        // need a connection and call the driverManger to access the database
-        // need have throws exception
+    public loadWallet() throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
+
+        //get the data from the DB
         Connection walletConnection = DriverManager.getConnection("jdbc:sqlite:identifier.sqlite");
         Statement walletStatement = walletConnection.createStatement();
         ResultSet resultSet;
         resultSet = walletStatement.executeQuery("SELECT * FROM WALLET");
-        // also need exception
-        KeyFactory keyFactory = KeyFactory.getInstance("DSA");
-        PublicKey pub2 = null;
-        PrivateKey prv2 = null;
-        while(resultSet.next())// go through the database
-        {
-            pub2 = keyFactory.generatePublic(new X509EncodedKeySpec(resultSet.getBytes("PUBLIC_KEY")));
-            prv2 = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(resultSet.getBytes("PRIVATE_KEY")));
+
+        KeyFactory keyFactory = KeyFactory.getInstance("DSA") ;
+
+        PublicKey publicKey = null ;
+        PrivateKey privateKey = null ;
+
+        while(resultSet.next()){
+            publicKey = keyFactory.generatePublic(new X509EncodedKeySpec(resultSet.getBytes("PUBLIC_KEY")));
+            privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(resultSet.getBytes("PRIVATE_KEY")));
         }
-        this.wallet = new Wallet(pub2, prv2);
+
+        this.wallet = new Wallet(publicKey, privateKey) ;
     }
 
-    public Wallet getWallet()
-    {
+    public Wallet getWallet() {
         return wallet;
     }
-
 }

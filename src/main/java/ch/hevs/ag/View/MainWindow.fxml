@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-<?xml version="1.0" encoding="UTF-8"?>
-
-=======
->>>>>>> origin/master
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -14,14 +9,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<<<<<<< HEAD
-
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-   fx:controller="ch.hevs.ag.Controller.MainWindow">
-=======
-<BorderPane xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" fx:controller="com.company.Controller.MainWindowController">
->>>>>>> origin/master
+<BorderPane xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" fx:controller="ch.hevs.ag.Controller.MainWindowController">
    <top>
       <MenuBar prefHeight="25.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <menus>
@@ -35,7 +23,7 @@
       </MenuBar>
    </top>
    <center>
-      <TableView fx:id="tableview" prefHeight="406.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="tableView" prefHeight="406.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <columns>
             <TableColumn prefWidth="75.0" text="Current Block Transactions">
                <columns>
@@ -43,7 +31,7 @@
                   <TableColumn fx:id="to" prefWidth="160" text="To"/>
                   <TableColumn fx:id="value" prefWidth="160" text="Value"/>
                   <TableColumn fx:id="signature" prefWidth="160" text="Signature"/>
-                  <TableColumn fx:id="timestamp" prefWidth="160" text="Created On"/>
+                  <TableColumn fx:id="timeStamp" prefWidth="160" text="Created On"/>
                </columns>
             </TableColumn>
          </columns>
@@ -79,8 +67,4 @@
          </right>
       </BorderPane>
    </bottom>
-<<<<<<< HEAD
 </BorderPane>
-=======
-</BorderPane>
->>>>>>> origin/master
