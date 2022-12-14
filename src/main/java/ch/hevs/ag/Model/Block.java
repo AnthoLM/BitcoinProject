@@ -1,4 +1,4 @@
-package Model;
+package ch.hevs.ag.Model;
 import sun.security.provider.DSAPublicKeyImpl;
 
 import java.security.InvalidKeyException;
