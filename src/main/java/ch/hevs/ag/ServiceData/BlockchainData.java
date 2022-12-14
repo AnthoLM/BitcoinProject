@@ -58,7 +58,7 @@ public class BlockchainData {
         return FXCollections.observableArrayList(newBlockTransactionsFX);
     }
 
-    //return the amount of monney that the user have in his wallet
+    //return the amount of money that the user have in his wallet
     public String getWalletBallanceFX() {
         return getBalance(currentBlockChain, newBlockTransactions,
                 WalletData.getInstance().getWallet().getPublicKey()).toString();
