@@ -78,7 +78,7 @@ public class MainWindowController {
             eCoins.setText(BlockchainData.getInstance().getWalletBallanceFX());
         }
     }
-
+    @FXML
     public void refresh()
     {
         tableView.setItems(BlockchainData.getInstance().getTransactionLedgerFX());
@@ -86,6 +86,7 @@ public class MainWindowController {
         eCoins.setText(BlockchainData.getInstance().getWalletBallanceFX());
     }
 
+    @FXML
     public void handleExit()
     {
         BlockchainData.getInstance().setExit(true);
