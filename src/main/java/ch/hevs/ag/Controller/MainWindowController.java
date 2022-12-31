@@ -38,7 +38,6 @@ public class MainWindowController {
     //initialize all the value that you can get in the window
     public void initialize()
     {
-
         Base64.Encoder encoder = Base64.getEncoder() ;
 
         from.setCellFactory(new PropertyValueFactory<>("fromFX"));
