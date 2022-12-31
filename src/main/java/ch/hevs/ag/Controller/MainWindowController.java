@@ -40,11 +40,11 @@ public class MainWindowController {
     {
         Base64.Encoder encoder = Base64.getEncoder() ;
 
-        from.setCellFactory(new PropertyValueFactory<>("fromFX"));
-        to.setCellFactory(new PropertyValueFactory<>("toFX"));
-        value.setCellFactory(new PropertyValueFactory<>("valueFX"));
-        timeStamp.setCellFactory(new PropertyValueFactory<>("timeStampFX"));
-        signature.setCellFactory(new PropertyValueFactory<>("signatureFX"));
+        from.setCellValueFactory(new PropertyValueFactory<>("fromFX"));
+        to.setCellValueFactory(new PropertyValueFactory<>("toFX"));
+        value.setCellValueFactory(new PropertyValueFactory<>("valueFX"));
+        timeStamp.setCellValueFactory(new PropertyValueFactory<>("timeStampFX"));
+        signature.setCellValueFactory(new PropertyValueFactory<>("signatureFX"));
 
         //get the balance of the wallet
         eCoins.setText(BlockchainData.getInstance().getWalletBallanceFX());

@@ -1,5 +1,6 @@
 package ch.hevs.ag;
 
+import ch.hevs.ag.Model.Wallet;
 import ch.hevs.ag.Threads.MiningThread;
 import ch.hevs.ag.Threads.PeerClient;
 import ch.hevs.ag.Threads.PeerServer;
@@ -10,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
 public class HelloApplication extends Application {
@@ -29,23 +31,38 @@ public class HelloApplication extends Application {
     @Override
     public void init()
     {
-        try
-        {
-            Connection blockchainConnection = DriverManager.getConnection("jdbc:sqlite:identifier.sqlite");
-            PreparedStatement pstmt = blockchainConnection.prepareStatement("INSERT INTO BLOCKCHAIN(PREVIOUS_HASH, CURRENT_HASH,LEDGER_ID" +
-                    "CREATED_ON, CREATED_BY, MINING_POINTS, LUCK)" +
-                    "VALUES(?,?,?,?,?,?,?)"); // create statements
-            pstmt.setBytes(1, );
-            pstmt.setBytes(2, );
-            pstmt.setInt(3, );
-            Statement blockchainStatement = blockchainConnection.createStatement(); // create statement using this connection to database
-            ResultSet resultSet = blockchainStatement.executeQuery("SELECT * FROM BLOCKCHAIN"); // execute SQL command
-            if(resultSet.next())
-            {
-                String firstColumn = resultSet.getString(1); // get content of specfic column
+        try {
+            //This creates your wallet if there is none and gives you a KeyPair.
+            //We will create it in separate db for better security and ease of portability.
+            Connection walletConnection = DriverManager
+                    .getConnection("jdbc:sqlite:db\\wallet.db");
+            Statement walletStatment = walletConnection.createStatement();
+
+            ResultSet resultSet = walletStatment.executeQuery(" SELECT * FROM WALLET ");
+            if (!resultSet.next()) {
+                Wallet newWallet = new Wallet();
+                byte[] pubBlob = newWallet.getPublicKey().getEncoded();
+                byte[] prvBlob = newWallet.getPrivateKey().getEncoded();
+                PreparedStatement pstmt = walletConnection
+                        .prepareStatement("INSERT INTO WALLET(PRIVATE_KEY, PUBLIC_KEY) " +
+                                " VALUES (?,?) ");
+                pstmt.setBytes(1, prvBlob);
+                pstmt.setBytes(2, pubBlob);
+                pstmt.executeUpdate();
             }
+            resultSet.close();
+            walletStatment.close();
+            walletConnection.close();
+
+
+            Connection blockchainConnection = DriverManager
+                    .getConnection("jdbc:sqlite:C:\\Users\\antoine.widmer\\Desktop\\Blockchain\\git\\testHESCoin\\testHESCoin\\db\\blockchain.db");
+            Statement blockchainStmt = blockchainConnection.createStatement();
+            ResultSet resultSetBlockchain = blockchainStmt.executeQuery(" SELECT * FROM BLOCKCHAIN ");
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
     }
 }

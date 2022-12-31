@@ -22,7 +22,7 @@ public class WalletData {
 
     public static WalletData getInstance(){return instance;}
 
-    public loadWallet() throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public void loadWallet() throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
 
         //get the data from the DB
         Connection walletConnection = DriverManager.getConnection("jdbc:sqlite:identifier.sqlite");

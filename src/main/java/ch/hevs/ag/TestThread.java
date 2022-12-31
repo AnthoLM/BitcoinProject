@@ -2,7 +2,7 @@ package ch.hevs.ag;
 
 public class TestThread extends Thread{
     public TestThread(String name) {
-        super(name)
+        super(name);
     }
 
     public void run(){
