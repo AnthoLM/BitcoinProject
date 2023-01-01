@@ -18,6 +18,7 @@ public class PeerRequestThread extends Thread{
         this.socket = socket ;
     }
 
+    @Override
     public void run ()
     {
         try {
@@ -25,12 +26,10 @@ public class PeerRequestThread extends Thread{
             ObjectInputStream objectInput = new ObjectInputStream(socket.getInputStream()) ;
 
             LinkedList<Block> recievedBC = (LinkedList<Block>) objectInput.readObject();
-            System.out.println("LedgerId = " + recievedBC.getLast().getLedgerId());
+            //System.out.println("LedgerId = " + recievedBC.getLast().getLedgerId());
 
             objectOutput.writeObject(BlockchainData.getInstance().getBlockchainConsensus(recievedBC));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

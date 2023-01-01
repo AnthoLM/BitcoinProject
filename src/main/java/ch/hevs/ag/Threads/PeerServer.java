@@ -2,7 +2,6 @@ package ch.hevs.ag.Threads;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 public class PeerServer extends Thread{
 
@@ -11,12 +10,11 @@ public class PeerServer extends Thread{
         this.serverSocket = new ServerSocket(socketPort) ;
     }
 
+    @Override
     public void run () {
         while(true){
             try {
-                Socket socket = serverSocket.accept() ;
-                Thread peerRequest = new PeerRequestThread(socket) ;
-                peerRequest.start();
+                new PeerRequestThread(serverSocket.accept()).start();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

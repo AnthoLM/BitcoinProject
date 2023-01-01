@@ -18,13 +18,12 @@ public class AddNewTransactionController {
 
     public void createNewTransaction() throws GeneralSecurityException {
         Base64.Decoder decoder = Base64.getDecoder();
+        Signature signing = Signature.getInstance("SHA256withDSA");
+        Integer ledgerId = BlockchainData.getInstance().getTransactionLedgerFX().get(0).getLedgerId();
         byte[] sendB = decoder.decode(toAddress.getText());
-        Transaction transaction = new Transaction(WalletData.getInstance().getWallet(), sendB, Integer.parseInt(value.getText()), BlockchainData.getInstance().getCurrentBlockChain().getFirst().getLedgerId(), Signature.getInstance("SHA256withDSA"));
+        Transaction transaction = new Transaction(WalletData.getInstance().getWallet(), sendB, Integer.parseInt(value.getText()), ledgerId, signing);
 
-        BlockchainData blockchainData = new BlockchainData();
-        blockchainData.getInstance().addTransaction(transaction, false); //pas sur
-        blockchainData.getInstance().addTransactionState(transaction);
-
-        //close window and open mainWindow
+        BlockchainData.getInstance().addTransaction(transaction, false);
+        BlockchainData.getInstance().addTransactionState(transaction);
     }
 }

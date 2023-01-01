@@ -39,7 +39,6 @@ public class WalletData {
             publicKey = keyFactory.generatePublic(new X509EncodedKeySpec(resultSet.getBytes("PUBLIC_KEY")));
             privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(resultSet.getBytes("PRIVATE_KEY")));
         }
-
         this.wallet = new Wallet(publicKey, privateKey) ;
     }
 

@@ -12,7 +12,7 @@ public class MiningThread extends Thread{
         {
             long lastMinedBlock = LocalDateTime.parse(BlockchainData.getInstance().getCurrentBlockChain().getLast().getTimeStamp()).toEpochSecond(ZoneOffset.UTC);
 
-            if(lastMinedBlock + BlockchainData.getMiningInterval()< LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))
+            if(lastMinedBlock + BlockchainData.getTimeoutInterval()< LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))
             {
                 System.out.println("Too old");
             }
@@ -29,7 +29,7 @@ public class MiningThread extends Thread{
             try {
                 Thread.sleep(2000);
                 if(BlockchainData.getInstance().isExit()){break;}
-                BlockchainData.getInstance().setMiningPoints(BlockchainData.getInstance().getMiningPoints());
+                BlockchainData.getInstance().setMiningPoints(BlockchainData.getInstance().getMiningPoints()+2);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -157,7 +157,7 @@ public class BlockchainData {
      */
     public void loadBlockChain() {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:HESCoin.sqlite");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:identifier.sqlite");
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery(" SELECT * FROM BLOCKCHAIN ");
             while (resultSet.next()) {
@@ -266,7 +266,7 @@ public class BlockchainData {
     private void addBlock(Block block) {
         try {
             Connection connection = DriverManager.getConnection
-                    ("jdbc:sqlite:HESCoin.sqlite");
+                    ("jdbc:sqlite:identifier.sqlite");
             PreparedStatement pstmt;
             pstmt = connection.prepareStatement
                     ("INSERT INTO BLOCKCHAIN(PREVIOUS_HASH, CURRENT_HASH, LEDGER_ID, CREATED_ON," +
@@ -294,7 +294,7 @@ public class BlockchainData {
     private void replaceBlockchainInDatabase(LinkedList<Block> receivedBC) {
         try {
             Connection connection = DriverManager.getConnection
-                    ("jdbc:sqlite:HESCoin.sqlite");
+                    ("jdbc:sqlite:identifier.sqlite");
             Statement clearDBStatement = connection.createStatement();
             clearDBStatement.executeUpdate(" DELETE FROM BLOCKCHAIN ");
             clearDBStatement.executeUpdate(" DELETE FROM TRANSACTIONS ");
