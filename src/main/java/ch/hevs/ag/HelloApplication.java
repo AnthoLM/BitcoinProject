@@ -43,7 +43,7 @@ public class HelloApplication extends Application {
             //This creates your wallet if there is none and gives you a KeyPair.
             //We will create it in separate db for better security and ease of portability.
             Connection walletConnection = DriverManager
-                    .getConnection("jdbc:sqlite:identifier.sqlite");
+                    .getConnection("jdbc:sqlite:C:\\Users\\guilh\\IdeaProjects\\BitcoinProject\\DB\\Wallet.sqlite");
             Statement walletStatment = walletConnection.createStatement();
 
             //There was no _ between primary and key
@@ -69,7 +69,7 @@ public class HelloApplication extends Application {
 
 
             Connection blockchainConnection = DriverManager
-                    .getConnection("jdbc:sqlite:identifier.sqlite");
+                    .getConnection("jdbc:sqlite:C:\\Users\\guilh\\IdeaProjects\\BitcoinProject\\DB\\BlockChain.sqlite");
             Statement blockchainStmt = blockchainConnection.createStatement();
             /*
 

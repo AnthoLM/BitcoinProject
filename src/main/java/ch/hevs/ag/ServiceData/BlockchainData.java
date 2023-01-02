@@ -127,10 +127,10 @@ public class BlockchainData {
                 throw new GeneralSecurityException("Not enough funds by sender to record transaction");
             } else {
                 Connection connection = DriverManager.getConnection
-                        ("jdbc:sqlite:identifier.sqlite");
+                        ("jdbc:sqlite:C:\\Users\\guilh\\IdeaProjects\\BitcoinProject\\DB\\BlockChain.sqlite");
 
                 PreparedStatement pstmt;
-                pstmt = connection.prepareStatement("INSERT INTO TRANSACTIONS" +
+                pstmt = connection.prepareStatement("INSERT INTO TRANSACTION" +
                         "(\"FROM\", \"TO\", LEDGER_ID, VALUE, SIGNATURE, CREATED_ON) " +
                         " VALUES (?,?,?,?,?,?) ");
                 pstmt.setBytes(1, transaction.getFrom());
@@ -157,7 +157,7 @@ public class BlockchainData {
      */
     public void loadBlockChain() {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:identifier.sqlite");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\guilh\\IdeaProjects\\BitcoinProject\\DB\\BlockChain.sqlite");
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery(" SELECT * FROM BLOCKCHAIN ");
             while (resultSet.next()) {
@@ -201,9 +201,9 @@ public class BlockchainData {
         ArrayList<Transaction> transactions = new ArrayList<>();
         try {
             Connection connection = DriverManager.getConnection
-                    ("jdbc:sqlite:HESCoin.sqlite");
+                    ("jdbc:sqlite:C:\\Users\\guilh\\IdeaProjects\\BitcoinProject\\DB\\BlockChain.sqlite");
             PreparedStatement stmt = connection.prepareStatement
-                    (" SELECT  * FROM TRANSACTIONS WHERE LEDGER_ID = ?");
+                    (" SELECT  * FROM TRANSACTION WHERE LEDGER_ID = ?");
             stmt.setInt(1, ledgerID);
             ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next()) {
@@ -266,7 +266,7 @@ public class BlockchainData {
     private void addBlock(Block block) {
         try {
             Connection connection = DriverManager.getConnection
-                    ("jdbc:sqlite:identifier.sqlite");
+                    ("jdbc:sqlite:C:\\Users\\guilh\\IdeaProjects\\BitcoinProject\\DB\\BlockChain.sqlite");
             PreparedStatement pstmt;
             pstmt = connection.prepareStatement
                     ("INSERT INTO BLOCKCHAIN(PREVIOUS_HASH, CURRENT_HASH, LEDGER_ID, CREATED_ON," +
@@ -294,7 +294,7 @@ public class BlockchainData {
     private void replaceBlockchainInDatabase(LinkedList<Block> receivedBC) {
         try {
             Connection connection = DriverManager.getConnection
-                    ("jdbc:sqlite:identifier.sqlite");
+                    ("jdbc:sqlite:C:\\Users\\guilh\\IdeaProjects\\BitcoinProject\\DB\\BlockChain.sqlite");
             Statement clearDBStatement = connection.createStatement();
             clearDBStatement.executeUpdate(" DELETE FROM BLOCKCHAIN ");
             clearDBStatement.executeUpdate(" DELETE FROM TRANSACTIONS ");
