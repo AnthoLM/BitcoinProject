@@ -43,11 +43,10 @@ public class HelloApplication extends Application {
             //This creates your wallet if there is none and gives you a KeyPair.
             //We will create it in separate db for better security and ease of portability.
             Connection walletConnection = DriverManager
-                    .getConnection("jdbc:sqlite:C:\\Users\\guilh\\IdeaProjects\\BitcoinProject\\DB\\Wallet.sqlite");
+                    .getConnection("jdbc:sqlite:DB\\BlockChain.sqlite");
             Statement walletStatment = walletConnection.createStatement();
 
-            //There was no _ between primary and key
-            walletStatment.executeUpdate("CREATE TABLE IF NOT EXISTS WALLET (PRIVATE_KEY BLOB NOT NULL UNIQUE, PUBLIC_KEY BLOB NOT NULL UNIQUE, PRIMARY_KEY (PRIVATE_KEY, PUBLIC_KEY))");
+            walletStatment.executeUpdate("CREATE TABLE IF NOT EXISTS WALLET (PRIVATE_KEY BLOB NOT NULL UNIQUE, PUBLIC_KEY BLOB NOT NULL UNIQUE, PRIMARY KEY (PRIVATE_KEY, PUBLIC_KEY))");
 
             ResultSet resultSet = walletStatment.executeQuery(" SELECT * FROM WALLET ");
             if (!resultSet.next()) {
@@ -69,22 +68,20 @@ public class HelloApplication extends Application {
 
 
             Connection blockchainConnection = DriverManager
-                    .getConnection("jdbc:sqlite:C:\\Users\\guilh\\IdeaProjects\\BitcoinProject\\DB\\BlockChain.sqlite");
+                    .getConnection("jdbc:sqlite:DB\\BlockChain.sqlite");
             Statement blockchainStmt = blockchainConnection.createStatement();
-            /*
 
 
-             */
             blockchainStmt.executeUpdate("CREATE TABLE IF NOT EXISTS BLOCKCHAIN("+
-                    " ID INTEGER NOT NULL UNIQUE, " +
+                    " ID INTEGER NOT NULL UNIQUE , " +
                     " PREVIOUS_HASH BLOB UNIQUE, "+
-                    " CURRENT_HASH BLBO UNIQUE, " +
-                    " LEDGER:ID INTEGER NOT NULL UNIQUE, " +
+                    " CURRENT_HASH BLOB UNIQUE, " +
+                    " LEDGER_ID INTEGER NOT NULL UNIQUE, " +
                     " CREATED_ON TEXT, " +
-                    " CREATED_BY BLBO, " +
+                    " CREATED_BY BLOB, " +
                     " MINING_POINTS TEXT, " +
                     " LUCK NUMERIC, " +
-                    " PRIMARY_KEY(ID AUTOINCREMENT))"); //There was no _ between primary and key$
+                    " PRIMARY KEY(ID AUTOINCREMENT))");
 
             ResultSet resultSetBlockchain = blockchainStmt.executeQuery(" SELECT * FROM BLOCKCHAIN ");
             Transaction initBlockRewardTransaction = null;
@@ -115,7 +112,7 @@ public class HelloApplication extends Application {
                 resultSetBlockchain.close();
             }
 
-            blockchainStmt.executeUpdate("CREATE TABLE IF NOT EXISTS TRANSACTIONS ( " +
+            blockchainStmt.executeUpdate("CREATE TABLE IF NOT EXISTS TRANSACTION ( " +
                     " ID INTEGER NOT NULL UNIQUE, " +
                     " \"FROM\" BLOB, " +
                     " \"TO\" BLOB, "+
@@ -123,7 +120,7 @@ public class HelloApplication extends Application {
                     " VALUE INTEGER, " +
                     "SIGNATURE BLOB UNIQUE, "+
                     "CREATED_ON TEXT, " +
-                    "PRAMARY_KEY(ID AUTOINCREMENT))"); //There was no _ between primary and key$
+                    "PRIMARY KEY(ID AUTOINCREMENT))");
             if(initBlockRewardTransaction !=null)
             {
                 BlockchainData.getInstance().addTransaction(initBlockRewardTransaction, true);
