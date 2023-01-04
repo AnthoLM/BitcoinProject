@@ -14,8 +14,8 @@ public class UI extends Application {
     public void start(Stage stage) {
         Parent root = null ;
         try{
-            System.out.println(getClass().getResource("/ch/hevs/ag/hello-view.fxml"));
-            root = FXMLLoader.load(getClass().getResource("/ch/hevs/ag/hello-view.fxml"));
+            System.out.println(getClass().getResource("/ch/hevs/ag/MainWindow.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/ch/hevs/ag/MainWindow.fxml"));
         }catch (IOException e){
             e.printStackTrace();
         }
