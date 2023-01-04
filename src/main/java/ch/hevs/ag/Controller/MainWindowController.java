@@ -37,14 +37,15 @@ public class MainWindowController {
     private TextArea publicKey ;
 
     //initialize all the value that you can get in the window
+
     public void initialize()
     {
         Base64.Encoder encoder = Base64.getEncoder() ;
 
         from.setCellValueFactory(new PropertyValueFactory<>("fromFX"));
         to.setCellValueFactory(new PropertyValueFactory<>("toFX"));
-        value.setCellValueFactory(new PropertyValueFactory<>("valueFX"));
-        timeStamp.setCellValueFactory(new PropertyValueFactory<>("timeStampFX"));
+        value.setCellValueFactory(new PropertyValueFactory<>("value"));
+        timeStamp.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
         signature.setCellValueFactory(new PropertyValueFactory<>("signatureFX"));
 
         //get the balance of the wallet
@@ -62,7 +63,7 @@ public class MainWindowController {
         Dialog<ButtonType> newTransactionController = new Dialog<>();
         newTransactionController.initOwner(borderPane.getScene().getWindow());
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("ch/hevs/ag/View/AddNewTransaction.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/ch/hevs/ag/AddNewTransaction.fxml"));
         try {
             newTransactionController.getDialogPane().setContent(fxmlLoader.load());
         } catch (IOException e){
