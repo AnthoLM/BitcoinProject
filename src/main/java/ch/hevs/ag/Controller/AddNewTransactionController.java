@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
 import java.security.*;
+import java.util.Base64;
 
 public class AddNewTransactionController {
 
@@ -16,12 +17,13 @@ public class AddNewTransactionController {
     private TextField value ;
 
     public void createNewTransaction() throws GeneralSecurityException {
-        Transaction transaction = new Transaction(WalletData.getInstance().getWallet(), toAddress.getText().getBytes(), Integer.valueOf(value.getText()), BlockchainData.getInstance().getCurrentBlockChain().getLast().getLedgerId(), Signature.getInstance("SHA256withDSA"));
+        Base64.Decoder decoder = Base64.getDecoder();
+        Signature signing = Signature.getInstance("SHA256withDSA");
+        Integer ledgerId = BlockchainData.getInstance().getTransactionLedgerFX().get(0).getLedgerId();
+        byte[] sendB = decoder.decode(toAddress.getText());
+        Transaction transaction = new Transaction(WalletData.getInstance().getWallet(), sendB, Integer.parseInt(value.getText()), ledgerId, signing);
 
-        BlockchainData blockchainData = new BlockchainData();
-        blockchainData.addTransactionState(transaction);
-        blockchainData.addTransaction(transaction, false); //pas sur
-
-        //close window and open mainWindow
+        BlockchainData.getInstance().addTransaction(transaction, false);
+        BlockchainData.getInstance().addTransactionState(transaction);
     }
 }

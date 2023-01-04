@@ -22,10 +22,10 @@ public class WalletData {
 
     public static WalletData getInstance(){return instance;}
 
-    public loadWallet() throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public void loadWallet() throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
 
         //get the data from the DB
-        Connection walletConnection = DriverManager.getConnection("jdbc:sqlite:identifier.sqlite");
+        Connection walletConnection = DriverManager.getConnection("jdbc:sqlite:DB\\Wallet.sqlite");
         Statement walletStatement = walletConnection.createStatement();
         ResultSet resultSet;
         resultSet = walletStatement.executeQuery("SELECT * FROM WALLET");
@@ -39,10 +39,8 @@ public class WalletData {
             publicKey = keyFactory.generatePublic(new X509EncodedKeySpec(resultSet.getBytes("PUBLIC_KEY")));
             privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(resultSet.getBytes("PRIVATE_KEY")));
         }
-
         this.wallet = new Wallet(publicKey, privateKey) ;
     }
-
     public Wallet getWallet() {
         return wallet;
     }

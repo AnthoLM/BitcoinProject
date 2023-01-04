@@ -3,15 +3,16 @@ package ch.hevs.ag.Controller;
 import ch.hevs.ag.Model.Transaction;
 import ch.hevs.ag.ServiceData.BlockchainData;
 import ch.hevs.ag.ServiceData.WalletData;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 
+import java.io.IOException;
 import java.util.Base64;
+import java.util.Optional;
 
 public class MainWindowController {
 
@@ -38,14 +39,13 @@ public class MainWindowController {
     //initialize all the value that you can get in the window
     public void initialize()
     {
-
         Base64.Encoder encoder = Base64.getEncoder() ;
 
-        from.setCellFactory(new PropertyValueFactory<>("fromFX"));
-        to.setCellFactory(new PropertyValueFactory<>("toFX"));
-        value.setCellFactory(new PropertyValueFactory<>("valueFX"));
-        timeStamp.setCellFactory(new PropertyValueFactory<>("timeStampFX"));
-        signature.setCellFactory(new PropertyValueFactory<>("signatureFX"));
+        from.setCellValueFactory(new PropertyValueFactory<>("fromFX"));
+        to.setCellValueFactory(new PropertyValueFactory<>("toFX"));
+        value.setCellValueFactory(new PropertyValueFactory<>("valueFX"));
+        timeStamp.setCellValueFactory(new PropertyValueFactory<>("timeStampFX"));
+        signature.setCellValueFactory(new PropertyValueFactory<>("signatureFX"));
 
         //get the balance of the wallet
         eCoins.setText(BlockchainData.getInstance().getWalletBallanceFX());
@@ -59,16 +59,37 @@ public class MainWindowController {
 
     public void toNewTransactionController()
     {
-
+        Dialog<ButtonType> newTransactionController = new Dialog<>();
+        newTransactionController.initOwner(borderPane.getScene().getWindow());
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("ch/hevs/ag/View/AddNewTransaction.fxml"));
+        try {
+            newTransactionController.getDialogPane().setContent(fxmlLoader.load());
+        } catch (IOException e){
+            System.out.println("Can't load");
+            e.printStackTrace();
+            return;
+        }
+        newTransactionController.getDialogPane().getButtonTypes().add(ButtonType.FINISH);
+        Optional<ButtonType> result = newTransactionController.showAndWait();
+        if (result.isPresent())
+        {
+            tableView.setItems(BlockchainData.getInstance().getTransactionLedgerFX());
+            eCoins.setText(BlockchainData.getInstance().getWalletBallanceFX());
+        }
     }
-
+    @FXML
     public void refresh()
     {
-
+        tableView.setItems(BlockchainData.getInstance().getTransactionLedgerFX());
+        tableView.getSelectionModel().select(0);
+        eCoins.setText(BlockchainData.getInstance().getWalletBallanceFX());
     }
 
+    @FXML
     public void handleExit()
     {
-
+        BlockchainData.getInstance().setExit(true);
+        Platform.exit();
     }
 }
