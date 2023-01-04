@@ -1,8 +1,11 @@
 package ch.hevs.ag.Model;
+//import sun.security.provider.DSAPublicKeyImpl;
+
 import sun.security.provider.DSAPublicKeyImpl;
 
 import java.security.InvalidKeyException;
 import java.security.Signature;
+import java.security.KeyFactory;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,9 +56,12 @@ public class Block {
      * @throws InvalidKeyException
      * @throws SignatureException
      */
-    public Boolean isVerified(Signature signing)
-            throws InvalidKeyException, SignatureException {
+    public Boolean isVerified(Signature signing) throws InvalidKeyException, SignatureException {
+
+        //marche pas
         signing.initVerify(new DSAPublicKeyImpl(this.minedBy));
+
+        System.out.println("I'm here");
         signing.update(this.toString().getBytes());
         return signing.verify(this.currHash);
     }

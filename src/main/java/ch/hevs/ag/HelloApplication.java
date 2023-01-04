@@ -30,6 +30,7 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        System.out.println(stage);
         new UI().start(stage);
         new PeerClient().start();
         new PeerServer(6000).start();
@@ -43,16 +44,17 @@ public class HelloApplication extends Application {
             //This creates your wallet if there is none and gives you a KeyPair.
             //We will create it in separate db for better security and ease of portability.
             Connection walletConnection = DriverManager
-                    .getConnection("jdbc:sqlite:DB\\BlockChain.sqlite");
+                    .getConnection("jdbc:sqlite:DB\\Wallet.sqlite");
             Statement walletStatment = walletConnection.createStatement();
 
-            walletStatment.executeUpdate("CREATE TABLE IF NOT EXISTS WALLET (PRIVATE_KEY BLOB NOT NULL UNIQUE, PUBLIC_KEY BLOB NOT NULL UNIQUE, PRIMARY KEY (PRIVATE_KEY, PUBLIC_KEY))");
+            //walletStatment.executeUpdate("CREATE TABLE IF NOT EXISTS WALLET (PRIVATE_KEY BLOB NOT NULL UNIQUE, PUBLIC_KEY BLOB NOT NULL UNIQUE, PRIMARY KEY (PRIVATE_KEY, PUBLIC_KEY))");
 
             ResultSet resultSet = walletStatment.executeQuery(" SELECT * FROM WALLET ");
             if (!resultSet.next()) {
                 Wallet newWallet = new Wallet();
                 byte[] pubBlob = newWallet.getPublicKey().getEncoded();
                 byte[] prvBlob = newWallet.getPrivateKey().getEncoded();
+
                 PreparedStatement pstmt = walletConnection
                         .prepareStatement("INSERT INTO WALLET(PRIVATE_KEY, PUBLIC_KEY) " +
                                 " VALUES (?,?) ");
@@ -71,7 +73,6 @@ public class HelloApplication extends Application {
                     .getConnection("jdbc:sqlite:DB\\BlockChain.sqlite");
             Statement blockchainStmt = blockchainConnection.createStatement();
 
-
             blockchainStmt.executeUpdate("CREATE TABLE IF NOT EXISTS BLOCKCHAIN("+
                     " ID INTEGER NOT NULL UNIQUE , " +
                     " PREVIOUS_HASH BLOB UNIQUE, "+
@@ -89,14 +90,14 @@ public class HelloApplication extends Application {
                 Block firstBlock = new Block();
                 firstBlock.setMinedBy(WalletData.getInstance().getWallet().getPublicKey().getEncoded());
                 firstBlock.setTimeStamp(LocalDateTime.now().toString());
-
+                firstBlock.setLuck(Math.random() * 1000000);
                 //Helper class
                 Signature signing = Signature.getInstance("SHA256withDSA");
                 signing.initSign(WalletData.getInstance().getWallet().getPrivateKey());
                 signing.update(firstBlock.toString().getBytes());
                 firstBlock.setCurrHash(signing.sign());
                 PreparedStatement pstmt = blockchainConnection.prepareStatement("INSERT INTO BLOCKCHAIN (PREVIOUS_HASH, CURRENT_HASH, LEDGER_ID," +
-                        " CREATED_ON, CREATED_BY, MINING_POINTS, LUCK)VALUES (?,?;?;?;?;?,?)");
+                        " CREATED_ON, CREATED_BY, MINING_POINTS, LUCK)VALUES (?,?,?,?,?,?,?)");
 
                 pstmt.setBytes(1, firstBlock.getPrevHash());
                 pstmt.setBytes(2, firstBlock.getCurrHash());
@@ -111,13 +112,12 @@ public class HelloApplication extends Application {
                 initBlockRewardTransaction = new Transaction(WalletData.getInstance().getWallet(), WalletData.getInstance().getWallet().getPublicKey().getEncoded(), 100, 1, transSignature);
                 resultSetBlockchain.close();
             }
-
-            blockchainStmt.executeUpdate("CREATE TABLE IF NOT EXISTS TRANSACTION ( " +
-                    " ID INTEGER NOT NULL UNIQUE, " +
-                    " \"FROM\" BLOB, " +
-                    " \"TO\" BLOB, "+
-                    " LEDGER_ID INTEGER, "+
-                    " VALUE INTEGER, " +
+            blockchainStmt.executeUpdate("CREATE TABLE IF NOT EXISTS TRANSACTIONS( " +
+                    "ID INTEGER NOT NULL UNIQUE, " +
+                    "\"FROM\" BLOB, " +
+                    "\"TO\" BLOB, "+
+                    "LEDGER_ID INTEGER, "+
+                    "`VALUE` INTEGER, " +
                     "SIGNATURE BLOB UNIQUE, "+
                     "CREATED_ON TEXT, " +
                     "PRIMARY KEY(ID AUTOINCREMENT))");
@@ -129,9 +129,7 @@ public class HelloApplication extends Application {
             blockchainStmt.close();
             blockchainConnection.close();
 
-        } catch (SQLException | InvalidKeyException | SignatureException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new RuntimeException(e);
-        } catch (GeneralSecurityException e) {
+        } catch (SQLException | GeneralSecurityException e) {
             throw new RuntimeException(e);
         }
         BlockchainData.getInstance().loadBlockChain();
