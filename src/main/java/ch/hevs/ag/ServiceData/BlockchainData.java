@@ -97,17 +97,10 @@ public class BlockchainData {
      */
     private void verifyBlockChain(LinkedList<Block> currentBlockChain) throws GeneralSecurityException {
         for (Block block : currentBlockChain) {
-            System.out.println(signing);
-
-
             if (!block.isVerified(signing)) {//the problem is here 2
                 throw new GeneralSecurityException("Block validation failed");
             }
-
-
             ArrayList<Transaction> transactions = block.getTransactionLedger();
-
-
             for (Transaction transaction : transactions) {//the problem is here 3
                 if (!transaction.isVerified(signing)) {
                     throw new GeneralSecurityException("Transaction validation failed");
@@ -188,6 +181,7 @@ public class BlockchainData {
                 ));
             }
 
+            //to replace
             latestBlock = currentBlockChain.getLast();
             Transaction transaction = new Transaction(new Wallet(),
                     WalletData.getInstance().getWallet().getPublicKey().getEncoded(), 100, latestBlock.getLedgerId() + 1, signing);

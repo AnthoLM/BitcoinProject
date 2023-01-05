@@ -18,13 +18,7 @@ public class PeerClient extends Thread{
     public PeerClient ()
     {
         this.queue.add(12351);
-        this.queue.add(12352);
-        this.queue.add(12353);
-        this.queue.add(12354);
-        this.queue.add(12355);
-        this.queue.add(12356);
-        this.queue.add(12357);
-        this.queue.add(12358);
+
     }
 
     public void run ()

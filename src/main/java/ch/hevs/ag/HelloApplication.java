@@ -30,7 +30,6 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        System.out.println(stage);
         new UI().start(stage);
         new PeerClient().start();
         new PeerServer(12351).start();
@@ -47,7 +46,7 @@ public class HelloApplication extends Application {
                     .getConnection("jdbc:sqlite:DB\\Wallet.sqlite");
             Statement walletStatment = walletConnection.createStatement();
 
-            //walletStatment.executeUpdate("CREATE TABLE IF NOT EXISTS WALLET (PRIVATE_KEY BLOB NOT NULL UNIQUE, PUBLIC_KEY BLOB NOT NULL UNIQUE, PRIMARY KEY (PRIVATE_KEY, PUBLIC_KEY))");
+            walletStatment.executeUpdate("CREATE TABLE IF NOT EXISTS WALLET (PRIVATE_KEY BLOB NOT NULL UNIQUE, PUBLIC_KEY BLOB NOT NULL UNIQUE, PRIMARY KEY (PRIVATE_KEY, PUBLIC_KEY))");
 
             ResultSet resultSet = walletStatment.executeQuery(" SELECT * FROM WALLET ");
             if (!resultSet.next()) {
