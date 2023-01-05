@@ -1,10 +1,9 @@
 package ch.hevs.ag.Model;
 
-import sun.security.provider.DSAPublicKeyImpl;
-
-import java.security.InvalidKeyException;
-import java.security.Signature;
-import java.security.SignatureException;
+import java.security.*;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Base64;
@@ -53,9 +52,13 @@ public class Transaction {
         this.signatureFX = encoder.encodeToString(this.signature);
     }
 
-    public Boolean isVerified(Signature signing)
-            throws InvalidKeyException, SignatureException {
-        signing.initVerify(new DSAPublicKeyImpl(this.getFrom()));
+    public Boolean isVerified(Signature signing) throws InvalidKeyException, SignatureException, InvalidKeySpecException, NoSuchAlgorithmException {
+
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(this.getFrom());
+        RSAPublicKey publicKey= (RSAPublicKey) keyFactory.generatePublic(keySpec);
+        signing.initVerify(publicKey);
+        //System.out.println("I'm here");
         signing.update(this.toString().getBytes());
         return signing.verify(this.signature);
     }

@@ -14,11 +14,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class PeerClient extends Thread{
 
-    private Queue<Integer> queue = new ConcurrentLinkedQueue<>();
+    private final Queue<Integer> queue = new ConcurrentLinkedQueue<>();
     public PeerClient ()
     {
-        this.queue.add(6001);
-        this.queue.add(6002);
+        this.queue.add(12350);
+        this.queue.add(12351);
     }
 
     public void run ()
@@ -26,7 +26,8 @@ public class PeerClient extends Thread{
         while (true)
         {
             try {
-                Socket socket = new Socket("127.0.0.1", queue.peek());
+                Socket socket = new Socket("192.168.0.50", queue.peek());
+                System.out.println("I'm here");
                 queue.add(queue.poll());
                 socket.setSoTimeout(5000);
 

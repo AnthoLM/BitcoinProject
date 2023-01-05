@@ -15,6 +15,7 @@ public class PeerRequestThread extends Thread{
 
     public PeerRequestThread(Socket socket)
     {
+        System.out.println("I'm here");
         this.socket = socket ;
     }
 
@@ -26,7 +27,7 @@ public class PeerRequestThread extends Thread{
             ObjectInputStream objectInput = new ObjectInputStream(socket.getInputStream()) ;
 
             LinkedList<Block> recievedBC = (LinkedList<Block>) objectInput.readObject();
-            //System.out.println("LedgerId = " + recievedBC.getLast().getLedgerId());
+            System.out.println("LedgerId = " + recievedBC.getLast().getLedgerId());
 
             objectOutput.writeObject(BlockchainData.getInstance().getBlockchainConsensus(recievedBC));
         } catch (IOException | ClassNotFoundException e) {

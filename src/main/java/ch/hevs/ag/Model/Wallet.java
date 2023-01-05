@@ -7,7 +7,7 @@ public class Wallet {
     private KeyPair keyPair ;
 
     public Wallet() throws NoSuchAlgorithmException{
-        this(2048, KeyPairGenerator.getInstance("DSA")) ;
+        this(2048, KeyPairGenerator.getInstance("RSA")) ;
     }
     public Wallet(Integer keySize, KeyPairGenerator keyPairGenerator){
         keyPairGenerator.initialize(keySize);

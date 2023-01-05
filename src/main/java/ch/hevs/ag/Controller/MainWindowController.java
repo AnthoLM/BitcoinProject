@@ -58,8 +58,10 @@ public class MainWindowController {
         tableView.getSelectionModel().select(0);
     }
 
+    @FXML
     public void toNewTransactionController()
     {
+        System.out.println(getClass().getResource("/ch/hevs/ag/AddNewTransaction.fxml"));
         Dialog<ButtonType> newTransactionController = new Dialog<>();
         newTransactionController.initOwner(borderPane.getScene().getWindow());
         FXMLLoader fxmlLoader = new FXMLLoader();

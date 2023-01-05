@@ -30,7 +30,7 @@ public class WalletData {
         ResultSet resultSet;
         resultSet = walletStatement.executeQuery("SELECT * FROM WALLET");
 
-        KeyFactory keyFactory = KeyFactory.getInstance("DSA") ;
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA") ;
 
         PublicKey publicKey = null ;
         PrivateKey privateKey = null ;
