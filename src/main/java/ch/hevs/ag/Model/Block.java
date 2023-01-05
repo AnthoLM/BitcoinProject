@@ -1,17 +1,16 @@
 package ch.hevs.ag.Model;
-//import sun.security.provider.DSAPublicKeyImpl;
 
-import sun.security.provider.DSAPublicKeyImpl;
+import java.io.Serializable;
+import java.security.*;
+import java.security.interfaces.RSAPublicKey;
 
-import java.security.InvalidKeyException;
-import java.security.Signature;
-import java.security.KeyFactory;
-import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public class Block {
+public class Block implements Serializable {
 
     private byte[] prevHash;
     private byte[] currHash ;
@@ -56,12 +55,12 @@ public class Block {
      * @throws InvalidKeyException
      * @throws SignatureException
      */
-    public Boolean isVerified(Signature signing) throws InvalidKeyException, SignatureException {
+    public Boolean isVerified(Signature signing) throws InvalidKeyException, SignatureException, InvalidKeySpecException, NoSuchAlgorithmException {
 
-        //marche pas
-        signing.initVerify(new DSAPublicKeyImpl(this.minedBy));
-
-        System.out.println("I'm here");
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(this.minedBy);
+        RSAPublicKey publicKey= (RSAPublicKey) keyFactory.generatePublic(keySpec);
+        signing.initVerify(publicKey);
         signing.update(this.toString().getBytes());
         return signing.verify(this.currHash);
     }

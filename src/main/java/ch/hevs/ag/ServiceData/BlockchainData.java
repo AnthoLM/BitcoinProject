@@ -5,9 +5,10 @@ import ch.hevs.ag.Model.Transaction;
 import ch.hevs.ag.Model.Wallet;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import sun.security.provider.DSAPublicKeyImpl;
 
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -26,7 +27,7 @@ public class BlockchainData {
     private static final int TIMEOUT_INTERVAL = 65;
     private static final int MINING_INTERVAL = 60;
     //helper class.
-    private Signature signing = Signature.getInstance("SHA256withDSA");
+    private Signature signing = Signature.getInstance("SHA256withRSA");
 
     //singleton class
     private static BlockchainData instance; // always the same object is getting coded and not a new one
@@ -96,25 +97,15 @@ public class BlockchainData {
      */
     private void verifyBlockChain(LinkedList<Block> currentBlockChain) throws GeneralSecurityException {
         for (Block block : currentBlockChain) {
-            System.out.println(signing);
-            //For now delete
-            /*
             if (!block.isVerified(signing)) {//the problem is here 2
                 throw new GeneralSecurityException("Block validation failed");
             }
-
-             */
             ArrayList<Transaction> transactions = block.getTransactionLedger();
-
-            //doesn't work for now
-            /*
             for (Transaction transaction : transactions) {//the problem is here 3
                 if (!transaction.isVerified(signing)) {
                     throw new GeneralSecurityException("Transaction validation failed");
                 }
             }
-
-             */
         }
     }
     public void addTransactionState(Transaction transaction) {
@@ -130,11 +121,20 @@ public class BlockchainData {
      * @param blockReward
      * @throws GeneralSecurityException
      */
-    public void addTransaction(Transaction transaction, boolean blockReward) throws GeneralSecurityException {
+    public void addTransaction(Transaction transaction, boolean blockReward) throws GeneralSecurityException, SQLException {
         try {
-            if (getBalance(currentBlockChain, newBlockTransactions,
-                    new DSAPublicKeyImpl(transaction.getFrom())) < transaction.getValue() && !blockReward) {
-                throw new GeneralSecurityException("Not enough funds by sender to record transaction");
+            PublicKey publicKey = null;
+            try {
+                X509EncodedKeySpec keySpec = new X509EncodedKeySpec(transaction.getFrom());
+                KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                publicKey = (keyFactory.generatePublic(keySpec));
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (InvalidKeySpecException e) {
+                throw new InvalidKeySpecException(e.getMessage(), e);
+            }
+            if (getBalance(currentBlockChain, newBlockTransactions, publicKey) < transaction.getValue() && !blockReward) {
+                throw new GeneralSecurityException("Not enough funds");
             } else {
                 Connection connection = DriverManager.getConnection
                         ("jdbc:sqlite:DB\\BlockChain.sqlite");
@@ -155,10 +155,8 @@ public class BlockchainData {
                 connection.close();
             }
         } catch (SQLException e) {
-            System.out.println("Problem with DB: " + e.getMessage());
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -183,10 +181,10 @@ public class BlockchainData {
                 ));
             }
 
+            //to replace
             latestBlock = currentBlockChain.getLast();
             Transaction transaction = new Transaction(new Wallet(),
-                    WalletData.getInstance().getWallet().getPublicKey().getEncoded(),
-                    100, latestBlock.getLedgerId() + 1, signing);
+                    WalletData.getInstance().getWallet().getPublicKey().getEncoded(), 100, latestBlock.getLedgerId() + 1, signing);
             newBlockTransactions.clear();
             newBlockTransactions.add(transaction);
 
@@ -360,6 +358,8 @@ public class BlockchainData {
             }
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return receivedBC;
     }
@@ -369,7 +369,7 @@ public class BlockchainData {
      * @param receivedBC The DB updated with all the transactions
      * @throws GeneralSecurityException
      */
-    private void updateTransactionLedgers(LinkedList<Block> receivedBC) throws GeneralSecurityException {
+    private void updateTransactionLedgers(LinkedList<Block> receivedBC) throws GeneralSecurityException, SQLException {
         for (Transaction transaction : receivedBC.getLast().getTransactionLedger()) {
             if (!getCurrentBlockChain().getLast().getTransactionLedger().contains(transaction) ) {
                 getCurrentBlockChain().getLast().getTransactionLedger().add(transaction);
@@ -434,7 +434,7 @@ public class BlockchainData {
     }
 
     private LinkedList<Block> compareMiningPointsAndLuck(LinkedList<Block> receivedBC)
-            throws GeneralSecurityException {
+            throws GeneralSecurityException, SQLException {
         //check if both blockchains have the same prevHashes to confirm they are both
         //contending to mine the last block
         //if they are the same compare the mining points and luck in case of equal mining points

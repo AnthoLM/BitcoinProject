@@ -14,11 +14,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class PeerClient extends Thread{
 
-    private Queue<Integer> queue = new ConcurrentLinkedQueue<>();
+    private final Queue<Integer> queue = new ConcurrentLinkedQueue<>();
     public PeerClient ()
     {
-        this.queue.add(6001);
-        this.queue.add(6002);
+        this.queue.add(12351);
+
     }
 
     public void run ()
@@ -26,16 +26,20 @@ public class PeerClient extends Thread{
         while (true)
         {
             try {
-                Socket socket = new Socket("127.0.0.1", queue.peek());
+                System.out.println(queue.peek());
+                Socket socket = new Socket("192.168.17.40", queue.peek());
+                System.out.println("Successful");
                 queue.add(queue.poll());
                 socket.setSoTimeout(5000);
 
                 ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream()) ;
                 ObjectInputStream objectInput = new ObjectInputStream(socket.getInputStream()) ;
-
                 LinkedList<Block> blockchain = BlockchainData.getInstance().getCurrentBlockChain();
                 //send
+                //Problem here
+
                 objectOutput.writeObject(blockchain);
+
                 //read
                 LinkedList<Block> returnedBlockchain = (LinkedList<Block>) objectInput.readObject();
                 //control

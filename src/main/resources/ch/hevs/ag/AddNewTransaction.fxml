@@ -4,7 +4,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<DialogPane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" prefHeight="266.0" prefWidth="667.0" fx:controller="ch.hevs.ag.Controller.AddNewTransactionController">
+<DialogPane prefHeight="266.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/18"  fx:controller="ch.hevs.ag.Controller.AddNewTransactionController" xmlns:fx="http://javafx.com/fxml/1" >
    <content>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="250.0" prefWidth="657.0">
          <children>

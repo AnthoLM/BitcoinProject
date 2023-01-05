@@ -30,10 +30,9 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        System.out.println(stage);
         new UI().start(stage);
         new PeerClient().start();
-        new PeerServer(6000).start();
+        new PeerServer(12351).start();
         new MiningThread().start();
     }
 
@@ -47,7 +46,7 @@ public class HelloApplication extends Application {
                     .getConnection("jdbc:sqlite:DB\\Wallet.sqlite");
             Statement walletStatment = walletConnection.createStatement();
 
-            //walletStatment.executeUpdate("CREATE TABLE IF NOT EXISTS WALLET (PRIVATE_KEY BLOB NOT NULL UNIQUE, PUBLIC_KEY BLOB NOT NULL UNIQUE, PRIMARY KEY (PRIVATE_KEY, PUBLIC_KEY))");
+            walletStatment.executeUpdate("CREATE TABLE IF NOT EXISTS WALLET (PRIVATE_KEY BLOB NOT NULL UNIQUE, PUBLIC_KEY BLOB NOT NULL UNIQUE, PRIMARY KEY (PRIVATE_KEY, PUBLIC_KEY))");
 
             ResultSet resultSet = walletStatment.executeQuery(" SELECT * FROM WALLET ");
             if (!resultSet.next()) {
@@ -92,7 +91,7 @@ public class HelloApplication extends Application {
                 firstBlock.setTimeStamp(LocalDateTime.now().toString());
                 firstBlock.setLuck(Math.random() * 1000000);
                 //Helper class
-                Signature signing = Signature.getInstance("SHA256withDSA");
+                Signature signing = Signature.getInstance("SHA256withRSA");
                 signing.initSign(WalletData.getInstance().getWallet().getPrivateKey());
                 signing.update(firstBlock.toString().getBytes());
                 firstBlock.setCurrHash(signing.sign());
@@ -108,7 +107,7 @@ public class HelloApplication extends Application {
                 pstmt.setDouble(7, firstBlock.getLuck());
                 pstmt.executeUpdate();
 
-                Signature transSignature = Signature.getInstance("SHA256withDSA");
+                Signature transSignature = Signature.getInstance("SHA256withRSA");
                 initBlockRewardTransaction = new Transaction(WalletData.getInstance().getWallet(), WalletData.getInstance().getWallet().getPublicKey().getEncoded(), 100, 1, transSignature);
                 resultSetBlockchain.close();
             }

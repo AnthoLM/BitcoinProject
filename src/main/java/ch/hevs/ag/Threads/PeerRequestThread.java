@@ -22,11 +22,12 @@ public class PeerRequestThread extends Thread{
     public void run ()
     {
         try {
+            System.out.println("I'm here");
             ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream objectInput = new ObjectInputStream(socket.getInputStream()) ;
 
             LinkedList<Block> recievedBC = (LinkedList<Block>) objectInput.readObject();
-            //System.out.println("LedgerId = " + recievedBC.getLast().getLedgerId());
+            System.out.println("LedgerId = " + recievedBC.getLast().getLedgerId());
 
             objectOutput.writeObject(BlockchainData.getInstance().getBlockchainConsensus(recievedBC));
         } catch (IOException | ClassNotFoundException e) {
