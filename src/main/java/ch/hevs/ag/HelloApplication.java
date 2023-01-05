@@ -33,7 +33,7 @@ public class HelloApplication extends Application {
         System.out.println(stage);
         new UI().start(stage);
         new PeerClient().start();
-        new PeerServer(12349).start();
+        new PeerServer(12351).start();
         new MiningThread().start();
     }
 

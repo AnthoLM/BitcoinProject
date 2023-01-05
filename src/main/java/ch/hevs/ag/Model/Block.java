@@ -1,5 +1,6 @@
 package ch.hevs.ag.Model;
 
+import java.io.Serializable;
 import java.security.*;
 import java.security.interfaces.RSAPublicKey;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public class Block {
+public class Block implements Serializable {
 
     private byte[] prevHash;
     private byte[] currHash ;
@@ -60,7 +61,6 @@ public class Block {
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(this.minedBy);
         RSAPublicKey publicKey= (RSAPublicKey) keyFactory.generatePublic(keySpec);
         signing.initVerify(publicKey);
-        //System.out.println("I'm here");
         signing.update(this.toString().getBytes());
         return signing.verify(this.currHash);
     }

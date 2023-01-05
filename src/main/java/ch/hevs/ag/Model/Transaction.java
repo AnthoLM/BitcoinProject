@@ -1,5 +1,6 @@
 package ch.hevs.ag.Model;
 
+import java.io.Serializable;
 import java.security.*;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
@@ -8,15 +9,15 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Base64;
 
-public class Transaction {
+public class Transaction implements Serializable {
     private byte[] from;
-    private String fromFX;
+    private final String fromFX;
     private byte[] to;
-    private String toFX;
+    private final String toFX;
     private Integer value;
-    private String timestamp;
-    private byte[] signature;
-    private  String signatureFX;
+    private final String timestamp;
+    private final byte[] signature;
+    private final String signatureFX;
     private Integer ledgerId;
 
 

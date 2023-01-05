@@ -17,8 +17,14 @@ public class PeerClient extends Thread{
     private final Queue<Integer> queue = new ConcurrentLinkedQueue<>();
     public PeerClient ()
     {
-        this.queue.add(12350);
         this.queue.add(12351);
+        this.queue.add(12352);
+        this.queue.add(12353);
+        this.queue.add(12354);
+        this.queue.add(12355);
+        this.queue.add(12356);
+        this.queue.add(12357);
+        this.queue.add(12358);
     }
 
     public void run ()
@@ -26,17 +32,20 @@ public class PeerClient extends Thread{
         while (true)
         {
             try {
-                Socket socket = new Socket("192.168.0.50", queue.peek());
-                System.out.println("I'm here");
+                System.out.println(queue.peek());
+                Socket socket = new Socket("192.168.17.40", queue.peek());
+                System.out.println("Successful");
                 queue.add(queue.poll());
                 socket.setSoTimeout(5000);
 
                 ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream()) ;
                 ObjectInputStream objectInput = new ObjectInputStream(socket.getInputStream()) ;
-
                 LinkedList<Block> blockchain = BlockchainData.getInstance().getCurrentBlockChain();
                 //send
+                //Problem here
+
                 objectOutput.writeObject(blockchain);
+
                 //read
                 LinkedList<Block> returnedBlockchain = (LinkedList<Block>) objectInput.readObject();
                 //control

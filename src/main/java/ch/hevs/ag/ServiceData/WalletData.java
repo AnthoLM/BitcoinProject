@@ -12,7 +12,7 @@ import java.sql.*;
 public class WalletData {
 
     private Wallet wallet ;
-    private  static WalletData instance ;
+    private  static final WalletData instance ;
     //in the creation of the class, it creates an object instance
     //No need to call this method (it is also impossible to call it)
     static

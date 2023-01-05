@@ -15,7 +15,6 @@ public class PeerRequestThread extends Thread{
 
     public PeerRequestThread(Socket socket)
     {
-        System.out.println("I'm here");
         this.socket = socket ;
     }
 
@@ -23,6 +22,7 @@ public class PeerRequestThread extends Thread{
     public void run ()
     {
         try {
+            System.out.println("I'm here");
             ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream objectInput = new ObjectInputStream(socket.getInputStream()) ;
 
