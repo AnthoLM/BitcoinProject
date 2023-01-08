@@ -18,7 +18,6 @@ public class PeerClient extends Thread{
     public PeerClient ()
     {
         this.queue.add(12351);
-
     }
 
     public void run ()
@@ -27,7 +26,7 @@ public class PeerClient extends Thread{
         {
             try {
                 System.out.println(queue.peek());
-                Socket socket = new Socket("192.168.17.40", queue.peek());
+                Socket socket = new Socket("192.168.164.82", queue.peek());
                 System.out.println("Successful");
                 queue.add(queue.poll());
                 socket.setSoTimeout(5000);
