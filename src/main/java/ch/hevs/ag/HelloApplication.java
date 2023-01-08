@@ -30,7 +30,7 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        System.out.println(stage);
+
         new UI().start(stage);
         new PeerClient().start();
         new PeerServer(12351).start();

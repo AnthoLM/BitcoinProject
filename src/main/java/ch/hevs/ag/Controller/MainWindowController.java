@@ -11,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
+import java.sql.*;
 import java.util.Base64;
 import java.util.Optional;
 
@@ -52,16 +53,17 @@ public class MainWindowController {
         eCoins.setText(BlockchainData.getInstance().getWalletBallanceFX());
         publicKey.setText(encoder.encodeToString(WalletData.getInstance().getWallet().getPublicKey().getEncoded()));
 
+        BlockchainData.getInstance().loadBlockChain();
         //Fill the tableView in the UI
         tableView.setItems(BlockchainData.getInstance().getTransactionLedgerFX());
         //The cursor will be on the first line (last transaction)
         tableView.getSelectionModel().select(0);
+
     }
 
     @FXML
     public void toNewTransactionController()
     {
-        System.out.println(getClass().getResource("/ch/hevs/ag/AddNewTransaction.fxml"));
         Dialog<ButtonType> newTransactionController = new Dialog<>();
         newTransactionController.initOwner(borderPane.getScene().getWindow());
         FXMLLoader fxmlLoader = new FXMLLoader();

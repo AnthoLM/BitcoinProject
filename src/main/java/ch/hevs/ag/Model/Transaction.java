@@ -59,7 +59,6 @@ public class Transaction implements Serializable {
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(this.getFrom());
         RSAPublicKey publicKey= (RSAPublicKey) keyFactory.generatePublic(keySpec);
         signing.initVerify(publicKey);
-        //System.out.println("I'm here");
         signing.update(this.toString().getBytes());
         return signing.verify(this.signature);
     }

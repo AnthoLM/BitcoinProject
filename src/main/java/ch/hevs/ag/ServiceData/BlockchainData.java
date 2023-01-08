@@ -97,18 +97,11 @@ public class BlockchainData {
      */
     private void verifyBlockChain(LinkedList<Block> currentBlockChain) throws GeneralSecurityException {
         for (Block block : currentBlockChain) {
-            System.out.println(signing);
-
-
-            if (!block.isVerified(signing)) {//the problem is here 2
+            if (!block.isVerified(signing)) {
                 throw new GeneralSecurityException("Block validation failed");
             }
-
-
             ArrayList<Transaction> transactions = block.getTransactionLedger();
-
-
-            for (Transaction transaction : transactions) {//the problem is here 3
+            for (Transaction transaction : transactions) {
                 if (!transaction.isVerified(signing)) {
                     throw new GeneralSecurityException("Transaction validation failed");
                 }
@@ -194,7 +187,6 @@ public class BlockchainData {
             newBlockTransactions.clear();
             newBlockTransactions.add(transaction);
 
-            //problem here
             verifyBlockChain(currentBlockChain);
             resultSet.close();
             stmt.close();

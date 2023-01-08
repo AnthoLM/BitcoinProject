@@ -14,12 +14,11 @@ public class UI extends Application {
     public void start(Stage stage) {
         Parent root = null ;
         try{
-            System.out.println(getClass().getResource("/ch/hevs/ag/MainWindow.fxml"));
             root = FXMLLoader.load(getClass().getResource("/ch/hevs/ag/MainWindow.fxml"));
         }catch (IOException e){
             e.printStackTrace();
         }
-        stage.setTitle("Weebz");
+        stage.setTitle("HES-Coins");
         stage.setScene(new Scene(root, 900, 700));
         stage.show();
     }
